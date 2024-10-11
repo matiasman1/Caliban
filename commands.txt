@@ -1,5 +1,5 @@
 ./gradlew bootRun
 
-$ curl -i -X GET http://localhost:8080/stats
+curl -i -X GET http://localhost:8080/stats
 
-$ curl -i -X POST http://localhost:8080/mutant/ -H "Content-Type: application/json" -d '{"dna":["CTGCGA","CAGTGC","TTATGT","AGAAGG","CCCGTA","TCACCG"]}'
+curl -i -X POST http://localhost:8080/mutant/ -H "Content-Type: application/json" -d '{"dna":["CTGCGA","CAGTGC","TTATGT","AGAAGG","CCCGTA","TCACCG"]}'
