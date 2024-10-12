@@ -1,6 +1,6 @@
 package com.example.Caliban.controller;
 
-import com.example.Caliban.MutantService;
+import com.example.Caliban.service.MutantService;
 import com.example.Caliban.dto.DnaRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

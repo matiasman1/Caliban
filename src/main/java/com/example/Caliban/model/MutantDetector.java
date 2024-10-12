@@ -9,26 +9,53 @@ public class MutantDetector {
     private int N;
     private int countstep;
     private MatrizPrint mp;
-    private int[][] geneHighlight; // Array to store the gene sequence coordinates
+    private int[][] geneHighlight; // Array para guardar las coordenadas de secuencia de genes
 
-    // Constructor initializes the dna, dnaMatrix, and N
+    // Constructor inicializa dna, dnaMatrix y N
     public MutantDetector(String[] dna) {
+
+        if (dna == null) {
+            throw new IllegalArgumentException("Error: DNA array es null");
+        }
+
         this.dna = dna;
         this.N = dna.length;
 
-        // Convert dna Strings to a character matrix
-        this.dnaMatrix = new char[N][N];
-        for (int i = 0; i < N; i++) {
-            dnaMatrix[i] = dna[i].toCharArray();
+        if (N == 0) {
+            throw new IllegalArgumentException("Error: DNA array esta vacio");
         }
 
-        // Initialize MatrizPrint with the matrix
+        for (String row : dna) {
+            if (row == null) {
+                throw new IllegalArgumentException("Error: No contiene nucleótidos");
+            }
+            if (row.length() != N) {
+                throw new IllegalArgumentException("Error: Matriz no es cuadrada");
+            }
+        }
+
+        // Convertir Strings adn a matriz de caracteres
+        this.dnaMatrix = new char[N][N];
+        for (int i = 0; i < N; i++) {
+            if (dna[i] == null) {
+                throw new IllegalArgumentException("Error: No contiene nucleótidos");
+            }
+            dnaMatrix[i] = dna[i].toCharArray();
+
+            for (char c : dnaMatrix[i]) {
+                if (c != 'A' && c != 'T' && c != 'C' && c != 'G') {
+                    throw new IllegalArgumentException("Error: No contiene nucleótidos");
+                }
+            }
+        }
+
+        // Inicializar MatrizPrint con la matriz
         this.mp = new MatrizPrint(dnaMatrix);
 
         System.out.println("Matriz sin resaltado:");
         mp.print();
 
-        // Initialize the geneHighlight array (4 coordinates max at a time)
+        // Initializar el array geneHighlight (4 coordenadas max)
         this.geneHighlight = new int[SEQUENCE_LENGTH][2];
     }
 
@@ -36,63 +63,73 @@ public class MutantDetector {
         this.dnaMatrix = dnaMatrix;
         this.N = dnaMatrix.length;
 
-        // Initialize MatrizPrint with the matrix
+        // Initializar MatrizPrint con la matriz
         this.mp = new MatrizPrint(dnaMatrix);
 
         System.out.println("Matriz sin resaltado:");
         mp.print();
 
-        // Initialize the geneHighlight array (4 coordinates max at a time)
+        // Initializar el array geneHighlight (4 coordenadas max)
         this.geneHighlight = new int[SEQUENCE_LENGTH][2];
     }
 
+    //Metodo que mide cuantos espacios quedan en una dirección desde una posición
     public int spaceLeft(int[] posicion, int[] direccion) {
         int[] spaceLeft = {0, 0};
+        //Itero dimension i en entre 0 e 1 (X e Y)
         for (int i = 0; i < 2; i++) {
+            //Si la direccion en la dimension i es distinta de 0
             if (direccion[i] != 0) {
+                //el espacio que queda por delante es Tamaño menos 1 menos posicion en dimension i
                 spaceLeft[i] = N - posicion[i] - 1;
             }
+            //Si la dirección en la dimension i es menor a 0 (diagonal izquierda)
             if (direccion[i] < 0) {
+                //el espacio que queda por delante es el indice de la posición en dimension i
                 spaceLeft[i] = posicion[i];
             }
+            //Si la direccion en la dimension i es 0
             if (direccion[i]==0){
+                //No me estoy moviendo en dimension i, entonces no me importa esta dimension
+                //entonces hago que el espacio que queda sea el mayor posible mas 1 (osea N), para la comparación final
                 spaceLeft[i]=N;
             }
         }
+        //Devuelvo el menor del espacio restante en ambas dimensiones
         return Math.min(spaceLeft[0], spaceLeft[1]);
     }
 
     public int recorrer(int[] inicio, int[] direccion) {
-        char pattern = '\0';  // Initialize with a null character
+        char pattern = '\0';  // Inicializar con un caracter nulo para el primer If
         int c = 0;
         int found = 0;
-        int[] coordinate = {inicio[0], inicio[1]};  // Copy of the starting coordinate
+        int[] coordinate = {inicio[0], inicio[1]};  // Copia de inicio
 
-        // Traverse while the coordinates are within bounds
+        // Recorrer mientras hayan espacios posibles para encontar una secuencia
         while (spaceLeft(coordinate, direccion) + c + 1 >= SEQUENCE_LENGTH) {
             char currentChar = dnaMatrix[coordinate[0]][coordinate[1]];
             countstep++;
-            // Check if the current character matches the pattern
+            // Chequear si el actual caracter iguala el patrón
             if (currentChar == pattern) {
-                geneHighlight[c] = new int[]{coordinate[0], coordinate[1]};  // Save the position
-                c++;  // Increment the match count
+                geneHighlight[c] = new int[]{coordinate[0], coordinate[1]};  // Guardo la posicion para Highlight
+                c++;  // Incremento el contador de patron
             } else {
-                pattern = currentChar;  // Update pattern to the current character
-                geneHighlight = new int[SEQUENCE_LENGTH][2]; // Reset highlight coordinates
-                geneHighlight[0] = new int[]{coordinate[0], coordinate[1]};  // Save the new start
-                c = 1;  // Reset the match count
+                pattern = currentChar;  // Actualizo el patron al nuevo caracter
+                geneHighlight = new int[SEQUENCE_LENGTH][2]; // Reseteo coordenadas para Highlight
+                geneHighlight[0] = new int[]{coordinate[0], coordinate[1]};  // Guardo el nuevo inicio para Highlight
+                c = 1;  // Reseteo el contador de patron
             }
 
-            // If a sequence of SEQUENCE_LENGTH is found
+            // Si una secuencia de SEQUENCE_LENGTH se encuentra
             if (c == SEQUENCE_LENGTH) {
-                found++;  // Increment found sequences
-                c = 0;    // Reset count for new sequences
+                found++;  // Incremento secuencias encontradsa
+                c = 0;    // Reseteo el contador de patron
 
-                // Highlight the sequence
+                // Imprimo la secuencia encontrada con Highlight
                 mp.highlight(geneHighlight);
             }
 
-            // Update the coordinates based on the direction
+            // Incremento la coordenada con las dimensiones de la dirección
             coordinate[0] += direccion[0];
             coordinate[1] += direccion[1];
         }

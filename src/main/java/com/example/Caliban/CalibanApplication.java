@@ -8,6 +8,7 @@ public class CalibanApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CalibanApplication.class, args);
+		System.out.println("ejecutando");
 	}
 
 }
