@@ -27,3 +27,5 @@ Magneto luego de consultar a Caliban sobre varias personas, puede consultar a Ca
 cuantos humanos y mutantes fueron detectados. De esta manera, Caliban le devolvera un JSON de formato `{"count_human_dna":`__Cantidad de humanos__ `,"count_mutant_dna":`__Cantidad de Mutantes__`,"ratio":`__Proporción Mutante/Humano__`}`
 
 Magneto está muy feliz con el servicio de Caliban, y confia que puede realizarle muchas consultas por segundo, viendo que el poder de Caliban es eficiente.
+
+El diagrama de secuencia de los datos que publica y solicita Magneto a Caliban esta en el archivo 
