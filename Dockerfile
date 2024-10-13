@@ -1,23 +1,23 @@
-# Use an official OpenJDK runtime as the base image
+# OpenJDK runtime oficial como imagen base
 FROM openjdk:17-jdk-alpine
 
-# Set the working directory inside the container
+# Directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copy the Gradle wrapper and project files into the container
+# Copiar el wrapper Gradle y archivos de projecto al contenedor
 COPY gradlew gradlew
+# Dar permiso de ejecutable al wrappper Gradle
+RUN chmod +x gradlew
+
 COPY gradle gradle
 COPY build.gradle settings.gradle ./
 COPY src src
 
-# Grant execute permission on the Gradle wrapper script
-RUN chmod +x gradlew
+# Build usando wrapper Gradle
+RUN sh ./gradlew clean build -x test
 
-# Build the project using the Gradle wrapper
-RUN ./gradlew build -x test
-
-# Expose port 8090 for the app
+# Exponer puerto 8090 para la app
 EXPOSE 8090
 
-# Set the command to run the application
+# Setear el comando para correr la applicación
 CMD ["java", "-jar", "build/libs/Caliban-0.0.1-SNAPSHOT.jar"]
