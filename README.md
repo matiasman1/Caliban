@@ -28,4 +28,4 @@ cuantos humanos y mutantes fueron detectados. De esta manera, Caliban le devolve
 
 Magneto está muy feliz con el servicio de Caliban, y confia que puede realizarle muchas consultas por segundo, viendo que el poder de Caliban es eficiente.
 
-El diagrama de secuencia de los datos que publica y solicita Magneto a Caliban esta en el archivo 
+El diagrama de secuencia de los datos que publica y solicita Magneto a Caliban esta en el archivo [Diagrama de Secuencia y Arquitectura del Sistema](https://github.com/matiasman1/Caliban/blob/0efe760720b7da162bc3f1f0103e395a6dec6029/Diagrama%20de%20Secuencia%20y%20Arquitectura%20del%20Sistema.pdf)
